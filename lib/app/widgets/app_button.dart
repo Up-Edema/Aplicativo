@@ -85,26 +85,43 @@ class SecondaryButton extends StatelessWidget {
     required this.text,
     this.onPressed,
     this.isLoading = false,
+    this.padding,
   });
 
   final String text;
   final VoidCallback? onPressed;
   final bool isLoading;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
+    final ButtonStyle? themeStyle = Theme.of(
+      context,
+    ).textButtonTheme.style;
+    final ButtonStyle? finalStyle =
+        padding != null
+        ? themeStyle?.copyWith(
+            padding: WidgetStateProperty.all(
+              padding,
+            ),
+          )
+        : themeStyle;
+
     return TextButton(
+      style: finalStyle,
       onPressed: isLoading ? null : onPressed,
       child: _ButtonChild(
         text: text,
         isLoading: isLoading,
         textColor: Theme.of(
           context,
-        ).colorScheme.primary,
+        ).colorScheme.primary, // Teal
       ),
     );
   }
 }
+
+// ...
 
 class OutlinedPrimaryButton
     extends StatelessWidget {

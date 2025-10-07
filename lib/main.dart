@@ -2,19 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:up_edema/app/shared/services/shared_prefs_service.dart';
 
 import 'app/app_module.dart';
 import 'app/app_widget.dart';
 
+late final SupabaseClient supabase;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
 
-  await dotenv.load(fileName: ".env");
+  String supabaseUrl =
+      dotenv.env['SUPABASE_URL'] ?? '';
+  String supabaseKey =
+      dotenv.env['SUPABASE_KEY'] ?? '';
 
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_KEY']!,
+    url: supabaseUrl,
+    anonKey: supabaseKey,
   );
 
-  runApp(ModularApp(module: AppModule(), child: const AppWidget(),),);
+  await SharedPrefsService().init();
+
+  runApp(
+    ModularApp(
+      module: AppModule(),
+      child: AppWidget(),
+    ),
+  );
 }

@@ -3,13 +3,10 @@ import 'package:up_edema/app/modules/home/presenter/pages/home_page.dart';
 
 class HomeModule extends Module {
   @override
-  void binds(i) {
-    // i.addLazySingleton<HomeRepository>(HomeRepositoryImpl.new);
-    // i.addLazySingleton<HomeViewModel>((i) => HomeViewModel(repository: i()));
-  }
+  void binds(i) {}
 
   @override
   void routes(r) {
-    r.child('/', child: (context) => const HomePage());
+    r.child('/', child: (context) => HomePage());
   }
 }
