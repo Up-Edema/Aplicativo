@@ -47,3 +47,38 @@ class ValidationCriteria extends StatelessWidget {
     );
   }
 }
+
+class AuthValidatorItem extends StatelessWidget {
+  const AuthValidatorItem({
+    super.key,
+    required this.label,
+    required this.valid,
+  });
+
+  final String label;
+  final bool valid;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          valid ? Iconsax.tick_circle : Iconsax.close_circle,
+          color: valid
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.error,
+          size: 18,
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            label,
+            style: Theme.of(context).textTheme.bodySmall,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+}

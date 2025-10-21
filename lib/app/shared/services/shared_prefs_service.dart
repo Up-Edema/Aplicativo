@@ -1,25 +1,23 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefsService {
-  late final SharedPreferences preferences;
+  SharedPrefsService._();
+  static final instance = SharedPrefsService._();
+  late final SharedPreferences _preferences;
 
   Future<void> init() async {
-    preferences =
-        await SharedPreferences.getInstance();
+    _preferences = await SharedPreferences.getInstance();
   }
 
   Future<void> saveUserToken(String token) async {
-    await preferences.setString(
-      'user_token',
-      token,
-    );
+    await _preferences.setString('user_token', token);
   }
 
   String? getUserToken() {
-    return preferences.getString('user_token');
+    return _preferences.getString('user_token');
   }
 
   Future<void> clearUserToken() async {
-    await preferences.remove('user_token');
+    await _preferences.remove('user_token');
   }
 }

@@ -4,15 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:up_edema/app/utils/app_theme.dart';
 import 'package:up_edema/app/widgets/app_button.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class LandingPage extends StatefulWidget {
+  const LandingPage({super.key});
 
   @override
-  State<HomePage> createState() =>
-      _HomePageState();
+  State<LandingPage> createState() => _LandingPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -20,8 +19,7 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: SizedBox(
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 color: AppColors.primary,
@@ -52,9 +50,7 @@ class _HomePageState extends State<HomePage> {
                   style: GoogleFonts.poppins(
                     fontSize: size.width * 0.04,
                     fontWeight: FontWeight.normal,
-                    color: const Color(
-                      0xFF8A8A8A,
-                    ),
+                    color: const Color(0xFF8A8A8A),
                     height: 1.5,
                   ),
                 ),
@@ -67,8 +63,8 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: PrimaryButton(
                   text: 'Cadastre-se',
-                  onPressed: () => Modular.to
-                      .pushNamed("auth/register"),
+                  onPressed: () =>
+                      Modular.to.pushNamed("auth/register"),
                   borderRadius: 10,
                 ),
               ),
@@ -76,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               SecondaryButton(
                 text: 'Acessar',
                 onPressed: () =>
-                    Modular.to.pushNamed("auth"),
+                    Modular.to.pushNamed('/auth/'),
               ),
             ],
           ),

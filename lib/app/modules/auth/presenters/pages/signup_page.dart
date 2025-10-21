@@ -15,24 +15,19 @@ class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
   @override
-  State<SignUpPage> createState() =>
-      _SignUpPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage>
     with ValidationMixin {
-  final SignUpStore store =
-      Modular.get<SignUpStore>();
+  final SignUpStore store = Modular.get<SignUpStore>();
 
   final _formKey = GlobalKey<FormState>();
-  final textMailController =
-      TextEditingController();
-  final textPasswordController =
-      TextEditingController();
+  final textMailController = TextEditingController();
+  final textPasswordController = TextEditingController();
   final textConfirmPasswordController =
       TextEditingController();
-  final textPhoneController =
-      TextEditingController();
+  final textPhoneController = TextEditingController();
 
   late final FocusNode mailFocus;
   late final FocusNode passwordFocus;
@@ -69,12 +64,8 @@ class _SignUpPageState extends State<SignUpPage>
   void _validatePassword(String password) {
     setState(() {
       _hasEightCharacters = password.length >= 8;
-      _hasUppercase = password.contains(
-        RegExp(r'[A-Z]'),
-      );
-      _hasNumber = password.contains(
-        RegExp(r'[0-9]'),
-      );
+      _hasUppercase = password.contains(RegExp(r'[A-Z]'));
+      _hasNumber = password.contains(RegExp(r'[0-9]'));
       _hasSpecialCharacter = password.contains(
         RegExp(r'[!@#$%^&*(),.?":{}|<>]'),
       );
@@ -83,8 +74,7 @@ class _SignUpPageState extends State<SignUpPage>
 
   void _submitForm() {
     final isFormValid =
-        _formKey.currentState?.validate() ??
-        false;
+        _formKey.currentState?.validate() ?? false;
     if (!isFormValid) return;
 
     final userRequest = UserCreateRequest(
@@ -101,26 +91,19 @@ class _SignUpPageState extends State<SignUpPage>
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Criar Conta"),
-      ),
+      appBar: AppBar(title: const Text("Criar Conta")),
       body: SafeArea(
         child: TripleListener<SignUpStore, String>(
           store: store,
           listener: (context, triple) {
             if (triple.error != null &&
                 triple.error is AuthException) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    (triple.error
-                            as AuthException)
-                        .message,
+                    (triple.error as AuthException).message,
                   ),
-                  backgroundColor:
-                      Colors.redAccent,
+                  backgroundColor: Colors.redAccent,
                 ),
               );
             }
@@ -134,12 +117,9 @@ class _SignUpPageState extends State<SignUpPage>
                   actions: [
                     TextButton(
                       child: const Text('OK'),
-                      onPressed: () =>
-                          Modular.to.popUntil(
-                            ModalRoute.withName(
-                              '/login/',
-                            ),
-                          ),
+                      onPressed: () => Modular.to.popUntil(
+                        ModalRoute.withName('/login/'),
+                      ),
                     ),
                   ],
                 ),
@@ -160,83 +140,65 @@ class _SignUpPageState extends State<SignUpPage>
                   const SizedBox(height: 5),
                   Text(
                     "Preencha seus dados abaixo para acessar a plataforma",
-                    style: textTheme.titleMedium
-                        ?.copyWith(fontSize: 16),
+                    style: textTheme.titleMedium?.copyWith(
+                      fontSize: 16,
+                    ),
                   ),
                   const SizedBox(height: 35),
                   CustomTextFormField(
                     label: 'Email',
                     hintText: 'E-mail',
-                    controller:
-                        textMailController,
+                    controller: textMailController,
                     prefixIcon: Iconsax.sms,
-                    keyboardType: TextInputType
-                        .emailAddress,
+                    keyboardType:
+                        TextInputType.emailAddress,
                     autovalidateMode:
-                        AutovalidateMode
-                            .onUserInteraction,
+                        AutovalidateMode.onUserInteraction,
                     focusNode: mailFocus,
-                    textInputAction:
-                        TextInputAction.next,
-                    onFieldSubmitted: (_) =>
-                        FocusScope.of(
-                          context,
-                        ).requestFocus(
-                          phoneFocus,
-                        ),
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (_) => FocusScope.of(
+                      context,
+                    ).requestFocus(phoneFocus),
                     validator: validateEmail,
                   ),
                   const SizedBox(height: 24),
                   CustomTextFormField(
                     label: 'Telefone',
                     hintText: '(00) 0000-0000',
-                    controller:
-                        textPhoneController,
+                    controller: textPhoneController,
                     prefixIcon: Iconsax.call,
-                    keyboardType:
-                        TextInputType.phone,
+                    keyboardType: TextInputType.phone,
                     inputFormatters: [
                       PhoneInputFormatter(),
                     ],
                     focusNode: phoneFocus,
-                    textInputAction:
-                        TextInputAction.next,
-                    onFieldSubmitted: (_) =>
-                        FocusScope.of(
-                          context,
-                        ).requestFocus(
-                          passwordFocus,
-                        ),
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (_) => FocusScope.of(
+                      context,
+                    ).requestFocus(passwordFocus),
                   ),
                   const SizedBox(height: 24),
                   CustomTextFormField(
                     label: 'Nova Senha',
                     hintText: 'Senha',
-                    controller:
-                        textPasswordController,
+                    controller: textPasswordController,
                     prefixIcon: Iconsax.lock,
                     obscureText: true,
                     onChanged: _validatePassword,
                     focusNode: passwordFocus,
-                    textInputAction:
-                        TextInputAction.next,
-                    onFieldSubmitted: (_) =>
-                        FocusScope.of(
-                          context,
-                        ).requestFocus(
-                          confirmPasswordFocus,
-                        ),
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (_) => FocusScope.of(
+                      context,
+                    ).requestFocus(confirmPasswordFocus),
                     validator: validatePassword,
                   ),
                   const SizedBox(height: 16),
                   ValidationCriteria(
-                    text:
-                        'Pelo menos 8 caracteres',
+                    text: 'Pelo menos 8 caracteres',
                     isValid: _hasEightCharacters,
                   ),
                   ValidationCriteria(
-                    text:
-                        'Pelo menos 1 letra maiúscula',
+                    text: 'Pelo menos 1 letra maiúscula',
                     isValid: _hasUppercase,
                   ),
                   ValidationCriteria(
@@ -244,8 +206,7 @@ class _SignUpPageState extends State<SignUpPage>
                     isValid: _hasNumber,
                   ),
                   ValidationCriteria(
-                    text:
-                        'Pelo menos 1 caractere especial',
+                    text: 'Pelo menos 1 caractere especial',
                     isValid: _hasSpecialCharacter,
                   ),
                   const SizedBox(height: 16),
@@ -256,39 +217,30 @@ class _SignUpPageState extends State<SignUpPage>
                         textConfirmPasswordController,
                     prefixIcon: Iconsax.lock_1,
                     obscureText: true,
-                    focusNode:
-                        confirmPasswordFocus,
-                    textInputAction:
-                        TextInputAction.done,
-                    onFieldSubmitted: (_) =>
-                        _submitForm(),
+                    focusNode: confirmPasswordFocus,
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (_) => _submitForm(),
                     validator: (value) =>
                         validateConfirmPassword(
                           value,
-                          textPasswordController
-                              .text,
+                          textPasswordController.text,
                         ),
                   ),
                   const SizedBox(height: 32),
-                  ScopedBuilder<
-                    SignUpStore,
-                    String
-                  >(
+                  ScopedBuilder<SignUpStore, String>(
                     store: store,
-                    onLoading: (_) =>
-                        PrimaryButton(
-                          text: 'Criar Conta',
-                          isLoading: true,
-                          onPressed: _submitForm,
-                          borderRadius: 10,
-                        ),
-                    onState: (_, __) =>
-                        PrimaryButton(
-                          text: 'Criar Conta',
-                          isLoading: false,
-                          onPressed: _submitForm,
-                          borderRadius: 10,
-                        ),
+                    onLoading: (_) => PrimaryButton(
+                      text: 'Criar Conta',
+                      isLoading: true,
+                      onPressed: _submitForm,
+                      borderRadius: 10,
+                    ),
+                    onState: (_, __) => PrimaryButton(
+                      text: 'Criar Conta',
+                      isLoading: false,
+                      onPressed: _submitForm,
+                      borderRadius: 10,
+                    ),
                   ),
 
                   const SizedBox(height: 10),
@@ -298,17 +250,14 @@ class _SignUpPageState extends State<SignUpPage>
                     children: [
                       Text(
                         "Já tem uma conta?",
-                        style:
-                            textTheme.titleMedium,
+                        style: textTheme.titleMedium,
                       ),
                       SecondaryButton(
                         text: 'Acessar',
-                        padding:
-                            const EdgeInsets.symmetric(
-                              horizontal: 6.0,
-                            ),
-                        onPressed: () =>
-                            Modular.to.pop(),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6.0,
+                        ),
+                        onPressed: () => Modular.to.pop(),
                       ),
                     ],
                   ),

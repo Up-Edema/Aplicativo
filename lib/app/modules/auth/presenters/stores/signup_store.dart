@@ -1,5 +1,5 @@
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:up_edema/app/modules/auth/data/repositories/auth_repository.dart';
+import 'package:up_edema/app/modules/auth/domain/interfaces/IAuth_repository.dart';
 import 'package:up_edema/app/modules/auth/domain/models/create_user_model.dart';
 
 class SignUpStore extends Store<String> {
