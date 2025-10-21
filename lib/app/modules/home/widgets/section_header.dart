@@ -22,7 +22,8 @@ class SectionHeader extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                     )));
     final TextStyle titleStyle = baseStyle.copyWith(
-      fontWeight: FontWeight.w700,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
     );
 
     return Padding(

@@ -29,12 +29,12 @@ class QuickActionsGrid extends StatelessWidget {
 
     final iconColor = Theme.of(context).colorScheme.primary;
     final tileBgColor = Color.alphaBlend(
-      iconColor.withOpacity(0.12),
+      iconColor.withValues(alpha: 0.12),
       Theme.of(context).colorScheme.surface,
     );
     final labelStyle = Theme.of(
       context,
-    ).textTheme.bodySmall?.copyWith(fontSize: 12);
+    ).textTheme.bodySmall?.copyWith(fontSize: 11);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16.0),
@@ -72,9 +72,8 @@ class QuickActionsGrid extends StatelessWidget {
                 action.label,
                 textAlign: TextAlign.center,
                 style: labelStyle,
-                maxLines: 1,
-                softWrap: false,
-                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                softWrap: true,
               ),
             ],
           );

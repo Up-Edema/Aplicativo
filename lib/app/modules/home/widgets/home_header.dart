@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
@@ -19,22 +18,10 @@ class HomeHeader extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Olá, Dr(a) 👋',
+                      'Olá, Dr(a)  👋',
                       style: textTheme.titleLarge,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Iconsax.menu),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Iconsax.notification),
-                        ),
-                      ],
                     ),
                   ],
                 ),

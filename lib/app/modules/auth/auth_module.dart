@@ -3,6 +3,7 @@ import 'package:up_edema/app/modules/auth/data/repositories/auth_repository.dart
 import 'package:up_edema/app/modules/auth/domain/interfaces/IAuth_repository.dart';
 import 'package:up_edema/app/modules/auth/presenters/pages/login_page.dart';
 import 'package:up_edema/app/modules/auth/presenters/pages/signup_page.dart';
+import 'package:up_edema/app/modules/auth/presenters/pages/verification_auth_page.dart';
 import 'package:up_edema/app/modules/auth/presenters/stores/login_store.dart';
 import 'package:up_edema/app/modules/auth/presenters/stores/signup_store.dart';
 
@@ -23,7 +24,8 @@ class AuthModule extends Module {
 
   @override
   void routes(RouteManager r) {
-    r.child('/', child: (context) => LoginPage());
-    r.child('/register', child: (context) => SignUpPage());
+    r.child('/', child: (context) => const LoginPage());
+    r.child('/register', child: (context) => const SignUpPage());
+    r.child('/verify', child: (context) => const VerificationAuthPage());
   }
 }
