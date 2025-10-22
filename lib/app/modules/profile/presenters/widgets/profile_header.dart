@@ -84,7 +84,7 @@ class ProfileHeader extends StatelessWidget {
                     border: Border.all(color: Colors.white70, width: 3),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -96,7 +96,7 @@ class ProfileHeader extends StatelessWidget {
                           )
                         : null,
                     color: photoUrl == null
-                        ? Colors.white.withOpacity(0.2)
+                        ? Colors.white.withValues(alpha: 0.2)
                         : null,
                   ),
                   child: photoUrl == null
@@ -114,7 +114,7 @@ class ProfileHeader extends StatelessWidget {
                 Text(
                   email,
                   style: theme.textTheme.titleMedium?.copyWith(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                   ),
                 ),
               ],

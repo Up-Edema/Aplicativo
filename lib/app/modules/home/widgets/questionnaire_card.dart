@@ -28,14 +28,14 @@ class QuestionnaireCard extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors.primary, AppColors.primary.withOpacity(0.9)],
+          colors: [AppColors.primary, AppColors.primary.withValues(alpha: 0.9)],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.25),
+            color: AppColors.primary.withValues(alpha: 0.25),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -51,7 +51,7 @@ class QuestionnaireCard extends StatelessWidget {
                 Text(
                   '$category • $progressText',
                   style: textTheme.bodySmall?.copyWith(
-                    color: Colors.white.withOpacity(0.85),
+                    color: Colors.white.withValues(alpha: 0.85),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -64,12 +64,11 @@ class QuestionnaireCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                // pequeno traço para reforçar a hierarquia, similar ao mock
                 Container(
                   width: 80,
                   height: 2,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.25),
+                    color: Colors.white.withValues(alpha: 0.25),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -77,7 +76,7 @@ class QuestionnaireCard extends StatelessWidget {
                 Text(
                   subtitle,
                   style: textTheme.bodyMedium?.copyWith(
-                    color: Colors.white.withOpacity(0.75),
+                    color: Colors.white.withValues(alpha: 0.75),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -107,16 +106,14 @@ class QuestionnaireCard extends StatelessWidget {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // Fundo do círculo
                 Container(
                   width: 88,
                   height: 88,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.15),
+                    color: Colors.white.withValues(alpha: 0.15),
                   ),
                 ),
-                // Animação do progresso
                 TweenAnimationBuilder<double>(
                   tween: Tween<double>(
                     begin: 0.0,
@@ -131,7 +128,7 @@ class QuestionnaireCard extends StatelessWidget {
                       child: CircularProgressIndicator(
                         value: value,
                         strokeWidth: 8,
-                        backgroundColor: Colors.white.withOpacity(0.25),
+                        backgroundColor: Colors.white.withValues(alpha: 0.25),
                         valueColor: const AlwaysStoppedAnimation<Color>(
                           Colors.white,
                         ),
@@ -139,7 +136,6 @@ class QuestionnaireCard extends StatelessWidget {
                     );
                   },
                 ),
-                // Texto central com percentual
                 Text(
                   '$percent%',
                   style: textTheme.titleMedium?.copyWith(

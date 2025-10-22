@@ -35,7 +35,6 @@ class QuickActionsGrid extends StatelessWidget {
     final labelStyle = Theme.of(
       context,
     ).textTheme.bodySmall?.copyWith(fontSize: 11);
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16.0),
       child: GridView.builder(

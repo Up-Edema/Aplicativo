@@ -12,4 +12,6 @@ abstract interface class IAuthrepository {
   });
 
   Future<bool> isLoggedIn();
+
+  Future<void> requestEmailVerificationCode({required String email});
 }

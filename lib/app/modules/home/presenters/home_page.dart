@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import 'package:up_edema/app/modules/home/widgets/home_header.dart';
@@ -8,6 +9,7 @@ import 'package:up_edema/app/modules/home/widgets/section_header.dart';
 import 'package:up_edema/app/modules/home/widgets/article_recommendations.dart';
 import 'package:up_edema/app/modules/home/widgets/questionnaire_card.dart';
 import 'package:up_edema/app/modules/profile/presenters/profile.page.dart';
+import 'package:up_edema/app/modules/home/widgets/explore_content_panel.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -73,19 +75,55 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class _HomeTab extends StatelessWidget {
+class _HomeTab extends StatefulWidget {
   const _HomeTab();
 
   @override
+  State<_HomeTab> createState() => _HomeTabState();
+}
+
+class _HomeTabState extends State<_HomeTab> {
+  final FocusNode _searchFocus = FocusNode();
+  bool _explore = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchFocus.addListener(() {
+      if (_searchFocus.hasFocus && !_explore) {
+        setState(() => _explore = true);
+        Future.delayed(const Duration(milliseconds: 300), () {
+          if (mounted) {
+            _searchFocus.requestFocus();
+          }
+        });
+      } else if (!_searchFocus.hasFocus && _explore) {
+        setState(() => _explore = false);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchFocus.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    final Widget homeContent = SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const HomeHeader(),
-          const HomeSearchField(),
+          HomeSearchField(focusNode: _searchFocus),
           const QuickActionsGrid(),
-          SectionHeader(title: 'Continue seus Questionários', onSeeAll: () {}),
+          SectionHeader(
+            title: 'Continue seus Questionários',
+            onSeeAll: () {
+              Modular.to.pushNamed('/quizzes/');
+            },
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 24.0,
@@ -140,11 +178,53 @@ class _HomeTab extends StatelessWidget {
               ],
             ),
           ),
-          SectionHeader(title: 'Recomendação de Artigo Novos', onSeeAll: () {}),
+          SectionHeader(
+            title: 'Artigos Recém Publicados',
+            onSeeAll: () {
+              Modular.to.pushNamed('/articles/');
+            },
+          ),
           const ArticleRecommendations(),
           const SizedBox(height: 32),
         ],
       ),
+    );
+
+    final Widget exploreContent = ExploreContentPanel(
+      searchFocus: _searchFocus,
+      onClose: () {
+        _searchFocus.unfocus();
+        setState(() => _explore = false);
+      },
+    );
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 250),
+      switchInCurve: Curves.easeOut,
+      switchOutCurve: Curves.easeOut,
+      layoutBuilder: (currentChild, previousChildren) {
+        // Mantém o layout estável para evitar perda de foco durante a transição
+        return Stack(
+          alignment: Alignment.topCenter,
+          children: <Widget>[
+            ...previousChildren,
+            if (currentChild != null) currentChild,
+          ],
+        );
+      },
+      transitionBuilder: (child, animation) {
+        final offsetAnimation = Tween<Offset>(
+          begin: const Offset(0, 0.03),
+          end: Offset.zero,
+        ).animate(animation);
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(position: offsetAnimation, child: child),
+        );
+      },
+      child: _explore
+          ? KeyedSubtree(key: const ValueKey('explore'), child: exploreContent)
+          : KeyedSubtree(key: const ValueKey('home'), child: homeContent),
     );
   }
 }

@@ -4,6 +4,8 @@ import 'package:up_edema/app/modules/home/home_module.dart';
 import 'package:up_edema/app/modules/landing/landing_module.dart';
 import 'package:up_edema/app/modules/profile/profile_module.dart';
 import 'package:up_edema/app/modules/splash/splash_module.dart';
+import 'package:up_edema/app/modules/articles/articles_module.dart';
+import 'package:up_edema/app/modules/quizzes/quizzes_module.dart';
 
 class AppModule extends Module {
   @override
@@ -24,5 +26,7 @@ class AppModule extends Module {
       transition: TransitionType.rightToLeftWithFade,
     );
     r.module('/profile/', module: ProfileModule());
+    r.module('/articles/', module: ArticlesModule());
+    r.module('/quizzes/', module: QuizzesModule());
   }
 }

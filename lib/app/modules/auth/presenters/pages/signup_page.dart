@@ -9,7 +9,11 @@ import 'package:up_edema/app/modules/auth/presenters/widgets/auth_field_widget.d
 import 'package:up_edema/app/modules/auth/presenters/widgets/auth_validator_widget.dart';
 import 'package:up_edema/app/modules/core/formatters/mask_input_formatters.dart';
 import 'package:up_edema/app/modules/core/mixins/mixin-validators.dart';
+import 'package:up_edema/app/modules/core/config/service_locator.dart';
 import 'package:up_edema/app/widgets/app_button.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide AuthException;
+import 'package:up_edema/app/modules/auth/domain/interfaces/IAuth_repository.dart';
+import 'package:up_edema/app/modules/auth/domain/models/user_login_model.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -18,15 +22,15 @@ class SignUpPage extends StatefulWidget {
   State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage>
-    with ValidationMixin {
+class _SignUpPageState extends State<SignUpPage> with ValidationMixin {
   final SignUpStore store = Modular.get<SignUpStore>();
+  final SupabaseClient supabase = getIt<SupabaseClient>();
+  final IAuthrepository authRepository = Modular.get<IAuthrepository>();
 
   final _formKey = GlobalKey<FormState>();
   final textMailController = TextEditingController();
   final textPasswordController = TextEditingController();
-  final textConfirmPasswordController =
-      TextEditingController();
+  final textConfirmPasswordController = TextEditingController();
   final textPhoneController = TextEditingController();
 
   late final FocusNode mailFocus;
@@ -73,8 +77,7 @@ class _SignUpPageState extends State<SignUpPage>
   }
 
   void _submitForm() {
-    final isFormValid =
-        _formKey.currentState?.validate() ?? false;
+    final isFormValid = _formKey.currentState?.validate() ?? false;
     if (!isFormValid) return;
 
     final userRequest = UserCreateRequest(
@@ -96,53 +99,62 @@ class _SignUpPageState extends State<SignUpPage>
         child: TripleListener<SignUpStore, String>(
           store: store,
           listener: (context, triple) {
-            if (triple.error != null &&
-                triple.error is AuthException) {
+            if (triple.error != null && triple.error is AuthException) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(
-                    (triple.error as AuthException).message,
-                  ),
+                  content: Text((triple.error as AuthException).message),
                   backgroundColor: Colors.redAccent,
                 ),
               );
             }
             if (triple.state.isNotEmpty) {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (_) => AlertDialog(
-                  title: const Text('Sucesso!'),
-                  content: Text(triple.state),
-                  actions: [
-                    TextButton(
-                      child: const Text('OK'),
-                      onPressed: () => Modular.to.popUntil(
-                        ModalRoute.withName('/login/'),
+              Future.microtask(() async {
+                try {
+                  await authRepository.requestEmailVerificationCode(
+                    email: textMailController.text,
+                  );
+                  Modular.to.pushNamed(
+                    '/auth/verify',
+                    arguments: textMailController.text,
+                  );
+                } catch (e) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) => AlertDialog(
+                      title: const Text('Cadastro realizado!'),
+                      content: const Text(
+                        'Não foi possível enviar o código automaticamente. Tente novamente pela opção "Reenviar código" na próxima tela.',
                       ),
+                      actions: [
+                        TextButton(
+                          child: const Text('Continuar'),
+                          onPressed: () {
+                            Modular.to.pop();
+                            Modular.to.pushNamed(
+                              '/auth/verify',
+                              arguments: textMailController.text,
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              );
+                  );
+                }
+              });
             }
           },
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24,
-              vertical: 16,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             child: Form(
               key: _formKey,
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 5),
                   Text(
                     "Preencha seus dados abaixo para acessar a plataforma",
-                    style: textTheme.titleMedium?.copyWith(
-                      fontSize: 16,
-                    ),
+                    style: textTheme.titleMedium?.copyWith(fontSize: 16),
                   ),
                   const SizedBox(height: 35),
                   CustomTextFormField(
@@ -150,15 +162,12 @@ class _SignUpPageState extends State<SignUpPage>
                     hintText: 'E-mail',
                     controller: textMailController,
                     prefixIcon: Iconsax.sms,
-                    keyboardType:
-                        TextInputType.emailAddress,
-                    autovalidateMode:
-                        AutovalidateMode.onUserInteraction,
+                    keyboardType: TextInputType.emailAddress,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     focusNode: mailFocus,
                     textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) => FocusScope.of(
-                      context,
-                    ).requestFocus(phoneFocus),
+                    onFieldSubmitted: (_) =>
+                        FocusScope.of(context).requestFocus(phoneFocus),
                     validator: validateEmail,
                   ),
                   const SizedBox(height: 24),
@@ -168,14 +177,11 @@ class _SignUpPageState extends State<SignUpPage>
                     controller: textPhoneController,
                     prefixIcon: Iconsax.call,
                     keyboardType: TextInputType.phone,
-                    inputFormatters: [
-                      PhoneInputFormatter(),
-                    ],
+                    inputFormatters: [PhoneInputFormatter()],
                     focusNode: phoneFocus,
                     textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) => FocusScope.of(
-                      context,
-                    ).requestFocus(passwordFocus),
+                    onFieldSubmitted: (_) =>
+                        FocusScope.of(context).requestFocus(passwordFocus),
                   ),
                   const SizedBox(height: 24),
                   CustomTextFormField(
@@ -213,18 +219,16 @@ class _SignUpPageState extends State<SignUpPage>
                   CustomTextFormField(
                     label: 'Confirmar Senha',
                     hintText: 'Senha',
-                    controller:
-                        textConfirmPasswordController,
+                    controller: textConfirmPasswordController,
                     prefixIcon: Iconsax.lock_1,
                     obscureText: true,
                     focusNode: confirmPasswordFocus,
                     textInputAction: TextInputAction.done,
                     onFieldSubmitted: (_) => _submitForm(),
-                    validator: (value) =>
-                        validateConfirmPassword(
-                          value,
-                          textPasswordController.text,
-                        ),
+                    validator: (value) => validateConfirmPassword(
+                      value,
+                      textPasswordController.text,
+                    ),
                   ),
                   const SizedBox(height: 32),
                   ScopedBuilder<SignUpStore, String>(
@@ -245,18 +249,12 @@ class _SignUpPageState extends State<SignUpPage>
 
                   const SizedBox(height: 10),
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        "Já tem uma conta?",
-                        style: textTheme.titleMedium,
-                      ),
+                      Text("Já tem uma conta?", style: textTheme.titleMedium),
                       SecondaryButton(
                         text: 'Acessar',
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6.0,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 6.0),
                         onPressed: () => Modular.to.pop(),
                       ),
                     ],

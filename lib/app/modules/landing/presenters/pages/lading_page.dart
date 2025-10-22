@@ -27,9 +27,7 @@ class _LandingPageState extends State<LandingPage> {
                 height: size.height * 0.5,
               ),
               Padding(
-                padding: EdgeInsetsGeometry.only(
-                  top: size.height * 0.07,
-                ),
+                padding: EdgeInsetsGeometry.only(top: size.height * 0.07),
                 child: Text(
                   "Up Edema",
                   style: TextStyle(
@@ -63,16 +61,14 @@ class _LandingPageState extends State<LandingPage> {
                 ),
                 child: PrimaryButton(
                   text: 'Cadastre-se',
-                  onPressed: () =>
-                      Modular.to.pushNamed("auth/register"),
+                  onPressed: () => Modular.to.pushNamed("/auth/register"),
                   borderRadius: 10,
                 ),
               ),
               const SizedBox(height: 12),
               SecondaryButton(
                 text: 'Acessar',
-                onPressed: () =>
-                    Modular.to.pushNamed('/auth/'),
+                onPressed: () => Modular.to.pushNamed('/auth/'),
               ),
             ],
           ),

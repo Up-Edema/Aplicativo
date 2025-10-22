@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-
-// IMPORTE AS DEPENDÊNCIAS NECESSÁRIAS
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-// Certifique-se de que o caminho para seu service locator está correto
 import 'package:up_edema/app/modules/core/config/service_locator.dart';
 
 class SplashPage extends StatefulWidget {

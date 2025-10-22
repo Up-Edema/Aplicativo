@@ -12,22 +12,12 @@ Future<void> main() async {
 
   await dotenv.load();
 
-  String supabaseUrl =
-      dotenv.env['SUPABASE_URL'] ?? '';
-  String supabaseKey =
-      dotenv.env['SUPABASE_KEY'] ?? '';
+  String supabaseUrl = dotenv.env['URL'] ?? '';
+  String supabaseKey = dotenv.env['KEY'] ?? '';
 
-  await Supabase.initialize(
-    url: supabaseUrl,
-    anonKey: supabaseKey,
-  );
+  await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
 
   setupLocator();
 
-  runApp(
-    ModularApp(
-      module: AppModule(),
-      child: AppWidget(),
-    ),
-  );
+  runApp(ModularApp(module: AppModule(), child: AppWidget()));
 }

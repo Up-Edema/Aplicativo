@@ -3,27 +3,23 @@ import 'package:up_edema/app/modules/auth/domain/exceptions/auth_exceptions.dart
     hide AuthException;
 import 'package:up_edema/app/modules/auth/domain/interfaces/IAuth_repository.dart';
 import 'package:up_edema/app/modules/auth/domain/models/create_user_model.dart';
+import 'package:up_edema/app/modules/auth/domain/models/enum_status.dart';
 import 'package:up_edema/app/modules/auth/domain/models/user_login_model.dart';
 import 'package:up_edema/app/modules/core/config/service_locator.dart';
 
 class AuthRepository implements IAuthrepository {
-  final SupabaseClient supabaseClient =
-      getIt<SupabaseClient>();
+  final SupabaseClient supabaseClient = getIt<SupabaseClient>();
 
   @override
-  Future<void> signUp({
-    required UserCreateRequest userRequestModel,
-  }) async {
+  Future<void> signUp({required UserCreateRequest userRequestModel}) async {
     try {
-      await supabaseClient.auth.signUp(
+      final response = await supabaseClient.auth.signUp(
         email: userRequestModel.mail,
         password: userRequestModel.password,
-        data: {'phone': userRequestModel.phone},
+        data: {'role': 'user', 'phone': userRequestModel.phone},
       );
     } on AuthException catch (e) {
-      if (e.message.toLowerCase().contains(
-        'user already registered',
-      )) {
+      if (e.message.toLowerCase().contains('user already registered')) {
         throw EmailAlreadyInUseException();
       }
       if (e.message.toLowerCase().contains(
@@ -33,31 +29,43 @@ class AuthRepository implements IAuthrepository {
       }
       throw GenericAuthException(e.message);
     } catch (err) {
-      throw Exception(
-        "Ocorreu um erro inesperado. Tente novamente.",
-      );
+      throw Exception("Ocorreu um erro inesperado. Tente novamente.");
     }
   }
 
   @override
-  Future<User> login({
-    required UserLoginModel loginModel,
-  }) async {
+  Future<User> login({required UserLoginModel loginModel}) async {
     try {
-      final response = await supabaseClient.auth
-          .signInWithPassword(
-            email: loginModel.mail,
-            password: loginModel.password,
-          );
-      if (response.user != null) {
-        return response.user!;
-      }
-      throw GenericAuthException(
-        "Falha ao autenticar o usuário.",
+      final response = await supabaseClient.auth.signInWithPassword(
+        email: loginModel.mail,
+        password: loginModel.password,
       );
+
+      final currentUser = supabaseClient.auth.currentUser;
+      if (currentUser != null) {
+        final profile = await supabaseClient
+            .from('profiles')
+            .select('status')
+            .eq('id', currentUser.id)
+            .single();
+
+        final statusString = (profile)['status'] as String?;
+        final status = UserStatus.values.firstWhere(
+          (e) => e.name == statusString,
+          orElse: () => UserStatus.inactive,
+        );
+
+        if (status == UserStatus.active) {
+          return currentUser;
+        } else {
+          await supabaseClient.auth.signOut();
+          throw GenericAuthException('Usuário inativo ou bloqueado.');
+        }
+      }
+
+      throw GenericAuthException("Falha ao autenticar o usuário.");
     } on AuthException catch (e) {
-      if (e.message ==
-          'Invalid login credentials') {
+      if (e.message == 'Invalid login credentials') {
         throw InvalidCredentialsException();
       }
       throw GenericAuthException(e.message);
@@ -72,11 +80,33 @@ class AuthRepository implements IAuthrepository {
   Future<bool> isLoggedIn() async {
     bool hasLogged = false;
 
-    final session =
-        supabaseClient.auth.currentSession;
+    final session = supabaseClient.auth.currentSession;
 
     hasLogged = session != null ? true : false;
 
     return hasLogged;
+  }
+
+  @override
+  Future<void> requestEmailVerificationCode({required String email}) async {
+    try {
+      final currentUser = supabaseClient.auth.currentUser;
+      final body = {
+        'email': email,
+        if (currentUser?.id != null) 'user_id': currentUser!.id,
+      };
+
+      final res = await supabaseClient.functions.invoke('generate-email-code',
+          body: body);
+
+      final data = res.data;
+      if (data is Map && data['error'] != null) {
+        throw GenericAuthException(data['error'].toString());
+      }
+    } on AuthException catch (e) {
+      throw GenericAuthException(e.message);
+    } catch (e) {
+      throw GenericAuthException('Falha ao solicitar código de verificação.');
+    }
   }
 }

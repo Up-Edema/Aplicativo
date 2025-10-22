@@ -6,29 +6,36 @@ import 'package:up_edema/app/modules/core/mixins/mixin-validators.dart';
 import 'package:up_edema/app/utils/app_theme.dart';
 import 'package:up_edema/app/widgets/app_button.dart';
 
-class ForgetPasswordPage extends StatefulWidget {
-  const ForgetPasswordPage({super.key});
+class ForgetChangePassword extends StatefulWidget {
+  const ForgetChangePassword({super.key});
 
   @override
-  State<ForgetPasswordPage> createState() => _ForgetPasswordPageState();
+  State<ForgetChangePassword> createState() => _ForgetPageState();
 }
 
-class _ForgetPasswordPageState extends State<ForgetPasswordPage>
+class _ForgetPageState extends State<ForgetChangePassword>
     with ValidationMixin {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  late final FocusNode _emailFocus;
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  late final FocusNode _newPasswordFocus;
+  late final FocusNode _confirmPasswordFocus;
 
   @override
   void initState() {
     super.initState();
-    _emailFocus = FocusNode();
+    _newPasswordFocus = FocusNode();
+    _confirmPasswordFocus = FocusNode();
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _emailFocus.dispose();
+    _newPasswordController.dispose();
+    _confirmPasswordController.dispose();
+    _newPasswordFocus.dispose();
+    _confirmPasswordFocus.dispose();
     super.dispose();
   }
 
@@ -36,10 +43,9 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage>
     final isValid = _formKey.currentState?.validate() ?? false;
     if (!isValid) return;
 
-    // TODO: integrar com fluxo de envio de link de recuperação se necessário
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Verifique seu e-mail para continuar.')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Solicitação enviada.')));
   }
 
   @override
@@ -70,12 +76,15 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage>
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text('Redefinir Senha', style: theme.textTheme.displaySmall),
+                  Text(
+                    'Redefinir Nova Senha',
+                    style: theme.textTheme.displaySmall,
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
               Text(
-                'Informe um email e enviamos um link para recuperação da sua senha.',
+                'Preencha o campo abaixo para redefinir sua senha atual.',
                 style: theme.textTheme.titleMedium,
               ),
               const SizedBox(height: 24),
@@ -85,20 +94,37 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomTextFormField(
-                      label: 'Email',
-                      hintText: 'seuemail@dominio.com',
-                      controller: _emailController,
-                      prefixIcon: Iconsax.sms,
-                      keyboardType: TextInputType.emailAddress,
+                      label: 'Nova Senha',
+                      hintText: 'Nova Senha',
+                      controller: _newPasswordController,
+                      prefixIcon: Iconsax.lock,
+                      obscureText: true,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      focusNode: _emailFocus,
+                      focusNode: _newPasswordFocus,
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) =>
+                          _confirmPasswordFocus.requestFocus(),
+                      validator: validatePassword,
+                    ),
+                    const SizedBox(height: 24),
+                    CustomTextFormField(
+                      label: 'Confirma Senha',
+                      hintText: 'Confirma Senha',
+                      controller: _confirmPasswordController,
+                      prefixIcon: Iconsax.lock_1,
+                      obscureText: true,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      focusNode: _confirmPasswordFocus,
                       textInputAction: TextInputAction.done,
                       onFieldSubmitted: (_) => _submit(),
-                      validator: validateEmail,
+                      validator: (v) => validateConfirmPassword(
+                        v,
+                        _newPasswordController.text,
+                      ),
                     ),
                     const SizedBox(height: 24),
                     PrimaryButton(
-                      text: 'Envie-me uma nova senha',
+                      text: 'Confirmar redefinição de senha',
                       onPressed: _submit,
                       borderRadius: 10,
                     ),
