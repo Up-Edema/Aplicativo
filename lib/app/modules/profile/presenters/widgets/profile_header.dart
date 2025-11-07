@@ -41,7 +41,7 @@ class ProfileHeader extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   'Meu Perfil',
@@ -49,24 +49,24 @@ class ProfileHeader extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                InkWell(
-                  onTap: onMenuPressed,
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.15),
-                      border: Border.all(color: Colors.white70),
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    child: const Icon(
-                      Iconsax.more,
-                      color: Colors.white,
-                      size: 18,
-                    ),
-                  ),
-                ),
+                // InkWell(
+                //   onTap: onMenuPressed,
+                //   borderRadius: BorderRadius.circular(20),
+                //   child: Container(
+                //     width: 36,
+                //     height: 36,
+                //     decoration: BoxDecoration(
+                //       color: Colors.white.withValues(alpha: 0.15),
+                //       border: Border.all(color: Colors.white70),
+                //       borderRadius: BorderRadius.circular(18),
+                //     ),
+                //     child: const Icon(
+                //       Iconsax.more,
+                //       color: Colors.white,
+                //       size: 18,
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

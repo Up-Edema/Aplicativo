@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:up_edema/app/modules/auth/presenters/stores/verification_store.dart';
+import 'package:up_edema/app/modules/core/config/service_locator.dart';
 import 'package:up_edema/app/utils/app_theme.dart';
 import 'package:up_edema/app/widgets/app_button.dart';
 
@@ -16,7 +17,7 @@ class VerificationPage extends StatefulWidget {
 }
 
 class _VerificationPageState extends State<VerificationPage> {
-  final VerificationStore store = Modular.get<VerificationStore>();
+  final VerificationStore store = getIt<VerificationStore>();
 
   final _controllers = List.generate(4, (_) => TextEditingController());
   final _focusNodes = List.generate(4, (_) => FocusNode());
@@ -77,7 +78,8 @@ class _VerificationPageState extends State<VerificationPage> {
     await store.verifyCode(email: widget.email, code: code);
     final state = store.state;
     if (state == true) {
-      Modular.to.pushReplacementNamed('/home/');
+      if (!mounted) return;
+      context.go('/home/');
     }
   }
 
@@ -89,7 +91,7 @@ class _VerificationPageState extends State<VerificationPage> {
         content: Text(message),
         actions: [
           TextButton(
-            onPressed: () => Modular.to.pop(),
+            onPressed: () => context.pop(),
             child: const Text('OK'),
           ),
         ],
@@ -104,7 +106,7 @@ class _VerificationPageState extends State<VerificationPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Iconsax.arrow_left_2),
-          onPressed: () => Modular.to.pop(),
+          onPressed: () => context.pop(),
         ),
         title: const Text('Verificação OTP'),
       ),
@@ -176,7 +178,7 @@ class _VerificationPageState extends State<VerificationPage> {
               children: [
                 const Text('Entrar na Conta? '),
                 GestureDetector(
-                  onTap: () => Modular.to.pushReplacementNamed('/auth/'),
+                  onTap: () => context.go('/auth/'),
                   child: Text(
                     'Login',
                     style: theme.textTheme.titleSmall?.copyWith(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class QuickAction {
@@ -49,32 +50,39 @@ class QuickActionsGrid extends StatelessWidget {
         itemCount: _actions.length,
         itemBuilder: (context, index) {
           final action = _actions[index];
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  color: tileBgColor,
-                  borderRadius: BorderRadius.circular(16),
+          return InkWell(
+            onTap: () {
+              if (action.label == 'Questionários') {
+                context.push('/quizzes/');
+              }
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: tileBgColor,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(
+                    action.icon,
+                    size: 22,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
-                alignment: Alignment.center,
-                child: Icon(
-                  action.icon,
-                  size: 22,
-                  color: Theme.of(context).colorScheme.primary,
+                const SizedBox(height: 8),
+                Text(
+                  action.label,
+                  textAlign: TextAlign.center,
+                  style: labelStyle,
+                  maxLines: 2,
+                  softWrap: true,
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                action.label,
-                textAlign: TextAlign.center,
-                style: labelStyle,
-                maxLines: 2,
-                softWrap: true,
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:up_edema/app/modules/core/config/service_locator.dart';
 
-import 'app/app_module.dart';
 import 'app/app_widget.dart';
 
 Future<void> main() async {
@@ -19,5 +17,5 @@ Future<void> main() async {
 
   setupLocator();
 
-  runApp(ModularApp(module: AppModule(), child: AppWidget()));
+  runApp(const AppWidget());
 }

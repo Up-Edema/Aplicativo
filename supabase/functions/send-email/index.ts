@@ -12,7 +12,7 @@ serve(async (req: Request) => {
     }
 
     const apiKey = Deno.env.get("RESEND_API_KEY");
-    const from = Deno.env.get("EMAIL_FROM") ?? "no-reply@example.com";
+    const from = Deno.env.get("EMAIL_FROM");
 
     if (!apiKey) {
       return new Response(

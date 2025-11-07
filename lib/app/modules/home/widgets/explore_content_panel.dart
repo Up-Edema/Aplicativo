@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:up_edema/app/modules/home/widgets/home_search_field.dart';
 import 'package:up_edema/app/modules/home/widgets/section_header.dart';
@@ -76,15 +76,18 @@ class ExploreContentPanel extends StatelessWidget {
                 childAspectRatio: 0.9,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
-                children: const [
-                  _CategoryItem('Sobre o Edema'),
-                  _CategoryItem('Artigos Científicos'),
-                  _CategoryItem('Mensuração'),
-                  _CategoryItem('Antropométricos'),
-                  _CategoryItem('Questionários'),
-                  _CategoryItem('Terapia Física'),
-                  _CategoryItem('Ajuda e Diagnóstico'),
-                  _CategoryItem('Sobre o App'),
+                children: [
+                  const _CategoryItem('Sobre o Edema'),
+                  const _CategoryItem('Artigos Científicos'),
+                  const _CategoryItem('Mensuração'),
+                  const _CategoryItem('Antropométricos'),
+                  GestureDetector(
+                    onTap: () => context.push('/quizzes/'),
+                    child: const _CategoryItem('Questionários'),
+                  ),
+                  const _CategoryItem('Terapia Física'),
+                  const _CategoryItem('Ajuda e Diagnóstico'),
+                  const _CategoryItem('Sobre o App'),
                 ],
               ),
             ),
@@ -93,7 +96,7 @@ class ExploreContentPanel extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: SectionHeader(
                 title: 'Recomendação de Artigo Novos',
-                onSeeAll: () => Modular.to.pushNamed('/articles/'),
+                onSeeAll: () => context.push('/articles/'),
               ),
             ),
             const Padding(

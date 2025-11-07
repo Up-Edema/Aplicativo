@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -8,6 +8,7 @@ import 'package:up_edema/app/modules/auth/presenters/stores/login_store.dart';
 import 'package:up_edema/app/modules/auth/presenters/widgets/auth_field_widget.dart';
 import 'package:up_edema/app/modules/core/mixins/mixin-validators.dart';
 import 'package:up_edema/app/widgets/app_button.dart';
+import 'package:up_edema/app/modules/core/config/service_locator.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,7 +18,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> with ValidationMixin {
-  final LoginStore store = Modular.get<LoginStore>();
+  final LoginStore store = getIt<LoginStore>();
 
   final _formKey = GlobalKey<FormState>();
   final textMailController = TextEditingController();
@@ -65,7 +66,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixin {
           store: store,
           listener: (context, triple) {
             if (triple.state != null) {
-              Modular.to.pushReplacementNamed('/home/');
+              context.go('/home');
             }
             if (triple.error != null) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -153,9 +154,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixin {
                             padding: const EdgeInsets.symmetric(
                               horizontal: 6.0,
                             ),
-                            onPressed: () => Modular.to.pushNamed(
-                              '/auth/register',
-                            ),
+                            onPressed: () => context.push('/auth/register'),
                           ),
                         ],
                       ),

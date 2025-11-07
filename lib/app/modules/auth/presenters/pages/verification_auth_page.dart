@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:up_edema/app/utils/app_theme.dart';
 import 'package:up_edema/app/widgets/app_button.dart';
@@ -92,7 +92,7 @@ class _VerificationAuthPageState extends State<VerificationAuthPage> {
       return;
     }
     // TODO: integrar verificação com backend
-    Modular.to.pushReplacementNamed('/home/');
+    context.go('/home');
   }
 
   void _resendCode() {
@@ -191,7 +191,7 @@ class _VerificationAuthPageState extends State<VerificationAuthPage> {
                     child: IconButton(
                       icon: const Icon(Iconsax.arrow_left_2),
                       color: theme.colorScheme.primary,
-                      onPressed: () => Modular.to.pop(),
+                      onPressed: () => context.pop(),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -246,7 +246,7 @@ class _VerificationAuthPageState extends State<VerificationAuthPage> {
                       style: theme.textTheme.titleMedium,
                     ),
                     GestureDetector(
-                      onTap: () => Modular.to.pushNamed('/auth/'),
+                      onTap: () => context.push('/auth/'),
                       child: Text('Login', style: theme.textTheme.labelLarge),
                     ),
                   ],

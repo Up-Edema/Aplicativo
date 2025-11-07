@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:up_edema/app/utils/app_theme.dart';
 import 'package:up_edema/app/widgets/app_button.dart';
@@ -61,14 +61,14 @@ class _LandingPageState extends State<LandingPage> {
                 ),
                 child: PrimaryButton(
                   text: 'Cadastre-se',
-                  onPressed: () => Modular.to.pushNamed("/auth/register"),
+                  onPressed: () => context.push('/auth/register'),
                   borderRadius: 10,
                 ),
               ),
               const SizedBox(height: 12),
               SecondaryButton(
                 text: 'Acessar',
-                onPressed: () => Modular.to.pushNamed('/auth/'),
+                onPressed: () => context.push('/auth'),
               ),
             ],
           ),

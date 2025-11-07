@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:up_edema/app/modules/core/config/service_locator.dart';
 
@@ -35,9 +35,11 @@ class _SplashPageState extends State<SplashPage>
     final session = supabase.auth.currentSession;
 
     if (session != null) {
-      Modular.to.pushReplacementNamed('/home/');
+      if (!mounted) return;
+      context.go('/home');
     } else {
-      Modular.to.pushReplacementNamed('/landing/');
+      if (!mounted) return;
+      context.go('/landing');
     }
   }
 

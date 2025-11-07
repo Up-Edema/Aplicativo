@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import 'package:up_edema/app/modules/home/widgets/home_header.dart';
@@ -121,7 +121,7 @@ class _HomeTabState extends State<_HomeTab> {
           SectionHeader(
             title: 'Continue seus Questionários',
             onSeeAll: () {
-              Modular.to.pushNamed('/quizzes/');
+              context.push('/quizzes');
             },
           ),
           Padding(
@@ -181,7 +181,7 @@ class _HomeTabState extends State<_HomeTab> {
           SectionHeader(
             title: 'Artigos Recém Publicados',
             onSeeAll: () {
-              Modular.to.pushNamed('/articles/');
+              context.push('/articles');
             },
           ),
           const ArticleRecommendations(),
@@ -203,7 +203,6 @@ class _HomeTabState extends State<_HomeTab> {
       switchInCurve: Curves.easeOut,
       switchOutCurve: Curves.easeOut,
       layoutBuilder: (currentChild, previousChildren) {
-        // Mantém o layout estável para evitar perda de foco durante a transição
         return Stack(
           alignment: Alignment.topCenter,
           children: <Widget>[

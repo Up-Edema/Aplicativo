@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:up_edema/app/modules/auth/domain/exceptions/auth_exceptions.dart';
@@ -23,9 +23,9 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> with ValidationMixin {
-  final SignUpStore store = Modular.get<SignUpStore>();
+  final SignUpStore store = getIt<SignUpStore>();
   final SupabaseClient supabase = getIt<SupabaseClient>();
-  final IAuthrepository authRepository = Modular.get<IAuthrepository>();
+  final IAuthrepository authRepository = getIt<IAuthrepository>();
 
   final _formKey = GlobalKey<FormState>();
   final textMailController = TextEditingController();
@@ -108,14 +108,16 @@ class _SignUpPageState extends State<SignUpPage> with ValidationMixin {
               );
             }
             if (triple.state.isNotEmpty) {
+              // Desativado temporariamente: fluxo de verificação por e-mail e navegação.
+              /*
               Future.microtask(() async {
                 try {
                   await authRepository.requestEmailVerificationCode(
                     email: textMailController.text,
                   );
-                  Modular.to.pushNamed(
+                  context.push(
                     '/auth/verify',
-                    arguments: textMailController.text,
+                    extra: textMailController.text,
                   );
                 } catch (e) {
                   showDialog(
@@ -130,10 +132,10 @@ class _SignUpPageState extends State<SignUpPage> with ValidationMixin {
                         TextButton(
                           child: const Text('Continuar'),
                           onPressed: () {
-                            Modular.to.pop();
-                            Modular.to.pushNamed(
+                            context.pop();
+                            context.push(
                               '/auth/verify',
-                              arguments: textMailController.text,
+                              extra: textMailController.text,
                             );
                           },
                         ),
@@ -142,6 +144,11 @@ class _SignUpPageState extends State<SignUpPage> with ValidationMixin {
                   );
                 }
               });
+              */
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Cadastro realizado!')),
+              );
+              context.go('/auth');
             }
           },
           child: SingleChildScrollView(
@@ -255,7 +262,7 @@ class _SignUpPageState extends State<SignUpPage> with ValidationMixin {
                       SecondaryButton(
                         text: 'Acessar',
                         padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                        onPressed: () => Modular.to.pop(),
+                        onPressed: () => context.pop(),
                       ),
                     ],
                   ),

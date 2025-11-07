@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:up_edema/app/modules/auth/presenters/widgets/auth_field_widget.dart';
 import 'package:up_edema/app/modules/core/mixins/mixin-validators.dart';
@@ -66,7 +66,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage>
                     child: IconButton(
                       icon: const Icon(Iconsax.arrow_left_2),
                       color: theme.colorScheme.primary,
-                      onPressed: () => Modular.to.pop(),
+                      onPressed: () => context.pop(),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -112,7 +112,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage>
                             style: theme.textTheme.titleMedium,
                           ),
                           GestureDetector(
-                            onTap: () => Modular.to.pushNamed('/auth/'),
+                            onTap: () => context.push('/auth'),
                             child: Text(
                               'Login',
                               style: theme.textTheme.labelLarge,
